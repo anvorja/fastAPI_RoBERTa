@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIO Format Tool</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --accent-color: #3b82f6;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --background-color: #f8fafc;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 1.875rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .counter {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--secondary-color);
+        }
+
+        .error {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .primary-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .primary-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .primary-button:disabled {
+            background-color: var(--secondary-color);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .output-section {
+            margin-top: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .tab-button:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        .tab-button.active {
+            background-color: #eff6ff;
+            color: var(--primary-color);
+        }
+
+        .output-container {
+            display: none;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .output-container.visible {
+            display: block;
+        }
+
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: ui-monospace, monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 1rem;
+        }
+
+        .download-button:hover {
+            background-color: #eff6ff;
+        }
+
+        .api-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .api-info h3 {
+            color: #1e293b;
+            margin-top: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .api-info pre {
+            background-color: white;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        /* Loader animation */
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧬 Extractor BIO Format</h1>
+        
+        <div class="input-group">
+            <label for="input">Texto para analizar:</label>
+            <textarea 
+                id="input" 
+                placeholder="Ingrese aquí la historia clínica o el texto médico que desea analizar (máximo 100 palabras)..."
+            ></textarea>
+            <div class="counter" id="wordCounter">0 palabras</div>
+            <div class="error" id="error"></div>
+        </div>
+
+        <button onclick="procesarTexto()" id="submitBtn" class="primary-button">
+            <span id="submitText">Analizar Texto</span>
+        </button>
+
+        <div class="output-section" id="outputSection" style="display: none;">
+            <div class="tabs" id="tabButtons">
+                <button class="tab-button active" onclick="mostrarTab('bioOutput')">
+                    Vista Simplificada
+                </button>
+                <button class="tab-button" onclick="mostrarTab('jsonOutput')">
+                    Vista (JSON)
+                </button>
+            </div>
+
+            <div id="bioOutput" class="output-container visible">
+                <label>Resultados del análisis:</label>
+                <pre id="output"></pre>
+            </div>
+
+            <div id="jsonOutput" class="output-container">
+                <label>Resultado detallado (formato JSON):</label>
+                <pre id="jsonViewer"></pre>
+                <button onclick="descargarJSON()" class="download-button" id="downloadBtn">
+                    📥 Descargar JSON
+                </button>
+            </div>
+        </div>
+
+        <div class="api-info">
+            <h3>💻 Información para Desarrolladores</h3>
+            <p>Este servicio está disponible vía API REST. Para integrarlo en su aplicación, realice una petición POST a:</p>
+            <pre>/get_bio</pre>
+            <p>Ejemplo de uso con curl:</p>
+            <pre>curl -X POST "https://tu-dominio/get_bio" \
+    -H "Content-Type: application/json" \
+    -d '{"text": "tu texto aquí"}'</pre>
+        </div>
+    </div>
+
+    <script>
+        let currentData = null;
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+        const jsonViewer = document.getElementById('jsonViewer');
+        const error = document.getElementById('error');
+        const wordCounter = document.getElementById('wordCounter');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = document.getElementById('submitText');
+        const outputSection = document.getElementById('outputSection');
+
+        input.addEventListener('input', function() {
+            const wordCount = this.value.trim().split(/\s+/).filter(word => word.length > 0).length;
+            wordCounter.textContent = `${wordCount} palabras`;
+            
+            if (wordCount > 100) {
+                error.textContent = '⚠️ El texto excede el límite de 100 palabras';
+                submitBtn.disabled = true;
+            } else {
+                error.textContent = '';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function mostrarTab(tabId) {
+            document.querySelectorAll('.output-container').forEach(container => {
+                container.classList.remove('visible');
+            });
+            document.getElementById(tabId).classList.add('visible');
+            
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function descargarJSON() {
+            if (!currentData) return;
+            
+            const blob = new Blob([JSON.stringify(currentData, null, 2)], {type: 'application/json'});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resultados_bio.json';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        async function procesarTexto() {
+            const texto = input.value.trim();
+            
+            if (!texto) {
+                error.textContent = '⚠️ Por favor ingrese algún texto';
+                return;
+            }
+
+            const wordCount = texto.split(/\s+/).filter(word => word.length > 0).length;
+            if (wordCount > 100) {
+                error.textContent = '⚠️ El texto excede el límite de 100 palabras';
+                return;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                submitText.innerHTML = '<span class="loading"></span> Analizando...';
+                output.textContent = 'Procesando...';
+                jsonViewer.textContent = 'Procesando...';
+                outputSection.style.display = 'block';
+                
+                const response = await fetch('/get_bio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: texto })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error en el servidor');
+                }
+
+                const data = await response.json();
+                currentData = data;
+                
+                // Formatear la salida BIO
+                const formattedOutput = data.bio_format
+                    .map(item => `${item.token}\t${item.tag}`)
+                    .join('\n');
+                
+                output.textContent = formattedOutput;
+                jsonViewer.textContent = JSON.stringify(data, null, 2);
+
+            } catch (err) {
+                error.textContent = '❌ Error al procesar el texto: ' + err.message;
+                output.textContent = '';
+                jsonViewer.textContent = '';
+            } finally {
+                submitBtn.disabled = false;
+                submitText.textContent = 'Analizar Texto';
+            }
+        }
+    </script>
+</body>
+</html>
