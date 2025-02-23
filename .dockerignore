@@ -1,0 +1,48 @@
+# Entornos virtuales
+.venv/
+venv/
+ENV/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Git
+.git
+.gitignore
+
+# IDEs y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.env
+
+# Archivos de prueba
+test.py
+tests/
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
+
+# Documentación
+docs/
+*.md
+!README.md
+
+# Archivos de desarrollo
+*.egg-info/
+dist/
+build/
+wheels/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb

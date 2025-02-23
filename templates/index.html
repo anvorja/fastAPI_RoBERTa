@@ -217,6 +217,53 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .postman-guide {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .postman-guide h3 {
+            color: #1e293b;
+            margin-top: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .postman-guide .steps {
+            margin-top: 1rem;
+        }
+
+        .postman-guide .step {
+            margin-bottom: 1.5rem;
+        }
+
+        .postman-guide .step-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .postman-guide ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .postman-guide li {
+            margin-bottom: 0.5rem;
+        }
+
+        .postman-guide code {
+            background-color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: ui-monospace, monospace;
+            font-size: 0.875rem;
+            border: 1px solid var(--border-color);
+        }
     </style>
 </head>
 <body>
@@ -265,10 +312,89 @@
             <h3>💻 Información para Desarrolladores</h3>
             <p>Este servicio está disponible vía API REST. Para integrarlo en su aplicación, realice una petición POST a:</p>
             <pre>/get_bio</pre>
-            <p>Ejemplo de uso con curl:</p>
-            <pre>curl -X POST "https:///get_bio" \
+            <p>Ejemplo de uso con curl: localhost</p>
+            <pre>curl -X POST "http://localhost:8015/get_bio" \
     -H "Content-Type: application/json" \
     -d '{"text": "tu texto aquí"}'</pre>
+            <p>Ejemplo de uso con curl en producción: (not working at this moment)</p>
+            <pre>curl -X POST "https://bio-format-tool.onrender.com/get_bio" \
+    -H "Content-Type: application/json" \
+    -d '{"text": "tu texto aquí"}'</pre>
+        </div>
+    </div>
+
+       <!-- Nueva sección de instrucciones de Postman -->
+        <div class="postman-guide">
+            <h3>📮 Instrucciones para usar Postman</h3>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-title">1. Crear una nueva petición</div>
+                    <ol>
+                        <li>Abre Postman</li>
+                        <li>Haz clic en el botón "+" para crear una nueva petición</li>
+                        <li>Selecciona el método "POST" en el menú desplegable</li>
+                    </ol>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">2. Configurar la URL</div>
+                    <ol>
+                        <li>Para entorno local:<br>
+                            <code>http://localhost:8015/get_bio</code>
+                        </li>
+                        <li>Para producción (cuando esté disponible):<br>
+                            <code>https://bio-format-tool.onrender.com/get_bio</code>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">3. Configurar los Headers</div>
+                    <ol>
+                        <li>Ve a la pestaña "Headers"</li>
+                        <li>Agrega un nuevo header:
+                            <br>Key: <code>Content-Type</code>
+                            <br>Value: <code>application/json</code>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">4. Configurar el Body</div>
+                    <ol>
+                        <li>Ve a la pestaña "Body"</li>
+                        <li>Selecciona la opción "raw"</li>
+                        <li>Selecciona "JSON" en el menú desplegable</li>
+                        <li>Ingresa el siguiente formato:
+                            <pre>{
+    "text": "tu texto aquí"
+}</pre>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">5. Enviar y recibir</div>
+                    <ol>
+                        <li>Haz clic en el botón "Send"</li>
+                        <li>La respuesta aparecerá en formato JSON con esta estructura:
+                            <pre>{
+    "bio_format": [
+        {
+            "token": "palabra1",
+            "tag": "B-TIPO"
+        },
+        {
+            "token": "palabra2",
+            "tag": "O"
+        }
+    ]
+}</pre>
+                        </li>
+                    </ol>
+                </div>
+            </div>
         </div>
     </div>
 
